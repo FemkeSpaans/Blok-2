@@ -8,11 +8,13 @@ import re
 
 def main():
     name_file = "TAIR10_pep_20101214.fa"
-    headers, seqs = read_file(name_file)
-    consensus(headers, seqs)
+    name_file_gff3 = "TAIR10_GFF3_genes.gff"
+    headers, seqs = read_file_fasta(name_file)
+    pattern = consensus(headers, seqs)
+    open_file(name_file_gff3)
 
 
-def read_file(name_file):
+def read_file_fasta(name_file):
     """
     Open file,
     iterate over every line,
@@ -43,9 +45,22 @@ def consensus(headers, seqs):
     [LIVMFYC]-x-[HY]-x-D-[LIVMFY]-K-x(2)-N-[LIVMFYCT](3)
     :param: headers
     :param: seqs
+    :return: pattern
+    """
+    match = []
+    for seq in seqs:
+        pattern = re.search(r"[LIVMFYC].[HY].D[LIVMFY]K..N[LIVMFYCT]{3}", seq)
+        if str(pattern) in seq:
+            match.append(headers)
+    print(match)
+
+
+def open_file(name_file_gff3):
+    """
     :return:
     """
-    pattern = re.search([])
+    file = open(name_file_gff3, 'r')
+    print(file[1])
 
 
 main()
