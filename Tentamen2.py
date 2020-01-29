@@ -6,6 +6,8 @@
 import re
 import numpy as np
 import matplotlib.pyplot as plt
+from tkinter import *
+from tkinter import messagebox
 
 
 def main():
@@ -27,11 +29,12 @@ def read_file_fasta(name_file):
     :return:headers
     :return: seqs
     """
+    file = open(name_file, 'r')
     headers = []
     seqs = []
     seq = ""
-    file = open(name_file, 'r')
     for line in file:
+        line = line.strip()
         if ">" in line:
             if seq != "":
                 seqs.append(seq)
@@ -39,7 +42,7 @@ def read_file_fasta(name_file):
             headers.append(line)
         else:
             seq += line.strip()
-        seqs.append(seq)
+    seqs.append(seq)
     print("Fasta ready")
     file.close()
     return headers, seqs
@@ -75,17 +78,17 @@ def open_file(name_file_gff3, matches):
     :param: matches
     :return: entry_match
     """
+    file = open(name_file_gff3, 'r')
     protein = []
     entry_match = []
-    with open(name_file_gff3, 'r') as f:
-        for line in f:
-            protein.append(line)
-        for item in matches:
-            for entry in protein:
-                if item in entry:
-                    entry_match.append(entry)
-    t = len(entry_match)
-    print(t)
+    for line in file:
+        protein.append(line)
+    for item in matches:
+        for entry in protein:
+            if item in entry:
+                if re.search(r"ID=", entry):
+                    if re.search(r"protein", entry):
+                        entry_match.append(entry)
     return entry_match
 
 
@@ -133,7 +136,6 @@ def matplotlib_graph(one, two, three, four, five):
     :param three:
     :param four:
     :param five:
-    :return:
     """
     names = [one, two, three, four, five]
     n = 5
@@ -145,6 +147,18 @@ def matplotlib_graph(one, two, three, four, five):
     plt.xticks(ind, ("Chr1", "Chr2", "Chr3", "Chr4", "Chr5"))
     plt.bar(range(len(names)), names)
     plt.show()
+
+class MyGUI:
+    """
+
+    """
+    root = Tk()
+    frame_buttons = Frame(root)
+    root.title("Accession numbers")
+    for item in entry_match
+
+    root.mainloop()
+
 
 
 main()
