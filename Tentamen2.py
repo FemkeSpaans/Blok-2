@@ -11,8 +11,6 @@ from tkinter import *
 
 def main():
     MyGUI()
-    one, two, three, four, five = matplotlib_data(entry_match)
-    matplotlib_graph(one, two, three, four, five)
 
 
 def read_file_fasta(name_file):
@@ -79,12 +77,16 @@ def consensus(headers, seqs):
     except KeyboardInterrupt:
         print("Ctrl c has been pressed, this ends the program")
 
+
 # Powerpoint van informatica lessen gebruikt.
 
 
 def open_file(name_file_gff3, matches):
     """
-    open file gff3 and put into a list
+    open file gff3 and put into a list,
+    iterate over every line in matches and find a match with protein
+    if ID is in list look for protein,
+    if protein is in list put this item into entry_matches
     :param: name_file_gff3
     :return: protein
     """
@@ -117,7 +119,8 @@ def open_file(name_file_gff3, matches):
 
 def matplotlib_data(entry_match):
     """
-    Data for the bar graph
+    Data for the bar graph,
+    count every chromosome number in list.
     :param: entry_match
     :return:one
     :return:two
@@ -161,7 +164,7 @@ def matplotlib_data(entry_match):
 
 def matplotlib_graph(one, two, three, four, five):
     """
-    create a graph
+    create a graph.
     :param one:
     :param two:
     :param three:
@@ -190,6 +193,7 @@ def matplotlib_graph(one, two, three, four, five):
 
 def find_length_gene(entry_match):
     """
+    subtract every end value of a gene from ever start value.
     :param entry_match:
     :return: length
     """
@@ -206,6 +210,9 @@ def find_length_gene(entry_match):
 
 def count_amount_exons(name_file_gff3, match):
     """
+    open file, make a list, make a counter,
+    if a match is found in entry,
+    look for the word exon and then plus 1.
     :param name_file_gff3:
     :param match:
     :return: exon
@@ -229,14 +236,12 @@ def count_amount_exons(name_file_gff3, match):
 
 
 class MyGUI:
-    """
-    """
 
     def __init__(self):
         self.data = Data()
 
         root = Tk()
-        root.title("huppeldepup")
+        root.title("Information of genes")
 
         mainframe = Frame(root, borderwidth=20)
         mainframe.grid(row=0, column=0)
@@ -275,6 +280,12 @@ class MyGUI:
         root.mainloop()
 
     def data_display(self, state):
+        """
+        look for correct chromosome number,
+        look for length of the gene,
+        count the exons on the gene.
+        :param state:
+        """
         # chromosome number finder
         accession_number = self.data.matches.index(state)
         data_entry = self.data.entry_match[accession_number] \
@@ -306,6 +317,10 @@ class Data:
         self.headers, self.seqs = read_file_fasta(self.name_file)
         self.matches = consensus(self.headers, self.seqs)
         self.entry_match = open_file(self.name_file_gff3, self.matches)
+
+        self.one, self.two, self.three, self.four, self.five = matplotlib_data(
+            self.entry_match)
+        matplotlib_graph(self.one, self.two, self.three, self.four, self.five)
 
 
 main()
